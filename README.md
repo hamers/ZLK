@@ -15,3 +15,5 @@ where mode is 0 to use the (semi)analytic methods to compute the minimum and max
 For information on more options, please refer to the help: type 
 
 `python(3) ZLK.py --help`
+
+Note: in order to carry out numerical integrations of the equations of motion, `SecularMultiple` is required: https://github.com/hamers/secularmultiple
