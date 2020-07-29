@@ -732,7 +732,7 @@ def epsoct_gamma_function(q1,q2,e2,gamma):
     return 4.0*gamma**2*e2 * ((1.0-q1)*(1.0+q1)**3/(q1**2)) * (q2**2/(1.0+q2))
 
 def alpha_da_function(q1,q2,e2,gamma):
-    return (1.0/8.0)*(1.0/(gamma**3)) * pow(1.0-e2**2,-3.0) * (q1**3*(1.0+q2)**2)/((1.0+q1)**6*(q2**4))
+    return (1.0/8.0)*(1.0/(gamma**3)) * (q1**3*(1.0+q2)**2)/((1.0+q1)**6*(q2**4))
     
 def plot_function_gamma_ranges(args):
 
@@ -771,7 +771,6 @@ def plot_function_gamma_ranges(args):
             
             plot.plot(e2_values,ys,color=color,linestyle=linestyle,linewidth=linewidth,label=label)
     plot.set_xlim(0.0,1.0)
-#    plot.set_ylim(0.0,1.0)
 
     plot.set_xlabel(r"$e_2$",fontsize=fontsize)
     plot.set_ylabel("$\gamma_\mathrm{stab}$",fontsize=fontsize)
@@ -791,9 +790,7 @@ def plot_function_gamma_ranges(args):
 #    print("test",epsoct_gamma_function(0.1,1.0,0.2,0.2))
     q1_values = [0.1,0.9]
     q2_values = [0.1,1.0,5]
-#    e2_values = np.linspace(0.0,1.0,N_points)
 
-    #e2_values = [0.1,0.9]
     e2_values = [0.5]
     for index_q1,q1 in enumerate(q1_values):
         linestyle=linestyles[index_q1]
@@ -802,12 +799,9 @@ def plot_function_gamma_ranges(args):
             linewidth=linewidths[index_q2]
         
             for index_e2,e2 in enumerate(e2_values):
-                #linewidth=linewidths[index_e2]
                 gamma_stab = gamma_stab_function(q1,q2,e2)
-                #gamma_values = np.linspace(0.0,gamma_stab)
                 gamma_values = pow(10.0,np.linspace(-3.0,np.log10(gamma_stab)))
 
-                #label = r'$q_1=%s; \, q_2=%s; \, e_2=%s$'%(q1,q2,e2)
                 label = r'$q_1=%s; \, q_2=%s$'%(q1,q2)
 
                 ys = []
@@ -835,28 +829,22 @@ def plot_function_gamma_ranges(args):
     fig = pyplot.figure(figsize=(8,6))
     plot=fig.add_subplot(1,1,1,xscale='log',yscale='log')
 
-#    print("test",epsoct_gamma_function(0.1,1.0,0.2,0.2))
     q1_values = [0.1,0.9]
     q2_values = [0.1,1.0,10]
-#    e2_values = np.linspace(0.0,1.0,N_points)
 
     #print("test",alpha_da_function(0.4,0.6,0.2,0.2))
-    #e2_values = [0.1,0.9]
     e2_values = [0.0,0.9]
     for index_q1,q1 in enumerate(q1_values):
         linestyle=linestyles[index_q1]
         for index_q2,q2 in enumerate(q2_values):
             color = colors[index_q2]
-            #linewidth=linewidths[index_q2]
         
             for index_e2,e2 in enumerate(e2_values):
                 linewidth=linewidths[index_e2]
                 gamma_stab = gamma_stab_function(q1,q2,e2)
-                #gamma_values = np.linspace(0.0,gamma_stab)
                 gamma_values = pow(10.0,np.linspace(-3.0,np.log10(gamma_stab)))
 
                 label = r'$q_1=%s; \, q_2=%s; \, e_2=%s$'%(q1,q2,e2)
-                #label = r'$q_1=%s; \, q_2=%s$'%(q1,q2)
 
                 ys = []
                 for index_gamma,gamma in enumerate(gamma_values):
@@ -864,8 +852,7 @@ def plot_function_gamma_ranges(args):
                     ys.append(alpha_da)
 
                 plot.plot(gamma_values,ys,color=color,linestyle=linestyle,linewidth=linewidth,label=label)
-    #plot.set_title('$e_2=0.5$',fontsize=fontsize)
-    
+   
     plot.axhline(y=1.0,color='tab:red',linestyle='dotted')
     plot.set_xlim(1e-3,1e2)
     plot.set_ylim(1.0e-1,1.0e8)
