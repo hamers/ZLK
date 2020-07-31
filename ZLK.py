@@ -692,7 +692,7 @@ def plot_function_contours(args):
                 plot.annotate("$39^\circ$",xy=(-0.55, 0.10),fontsize=fontsize*alpha,color=colors[0])
                 plot.annotate("$40^\circ$",xy=(-0.05, 0.17),fontsize=fontsize*alpha,color=colors[1])
                 plot.annotate("$46^\circ$",xy=(-0.05, 0.39),fontsize=fontsize*alpha,color=colors[2])
-                plot.annotate("$70^\circ$",xy=(-0.05, 0.84),fontsize=fontsize*alpha,color=colors[3])
+                plot.annotate("$70^\circ$",xy=(0.5, 0.74),fontsize=fontsize*alpha,color=colors[3])
 
                 plot.annotate("$39^\circ/$",xy=(-0.8, 0.52),fontsize=fontsize*alpha,color=colors[0])
                 plot.annotate("$40^\circ$",xy=(-0.6, 0.52),fontsize=fontsize*alpha,color=colors[1])
@@ -704,6 +704,8 @@ def plot_function_contours(args):
                 plot.annotate("$120^\circ$",xy=(-0.8,0.7),fontsize=fontsize*alpha,color=colors[2])
                 plot.annotate("$100^\circ$",xy=(-1,0.95),fontsize=fontsize*alpha,color=colors[3])
 
+                plot.annotate("$100^\circ$",xy=(0.58,0.7),fontsize=fontsize*alpha,color=colors[3])
+                plot.annotate("$120^\circ$",xy=(-0.05,0.7),fontsize=fontsize*alpha,color=colors[2])
                 plot.annotate("$150^\circ$",xy=(-0.8,0.26),fontsize=fontsize*alpha,color=colors[1])
 
             plot.set_xlim(-1.0,1.0)
