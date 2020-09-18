@@ -786,25 +786,31 @@ def plot_function_gamma_ranges(args):
     fig.savefig(filename,dpi=200)
 
     
-    fig = pyplot.figure(figsize=(8,6))
-    plot=fig.add_subplot(1,1,1,xscale='log',yscale='log')
 
 #    print("test",epsoct_gamma_function(0.1,1.0,0.2,0.2))
     q1_values = [0.1,0.9]
     q2_values = [0.1,1.0,5]
 
-    e2_values = [0.5]
+    e2_values = [0.1,0.99]
+
+    fig = pyplot.figure(figsize=(8,6))
+    plot=fig.add_subplot(1,1,1,xscale='log',yscale='log')
+
     for index_q1,q1 in enumerate(q1_values):
         linestyle=linestyles[index_q1]
         for index_q2,q2 in enumerate(q2_values):
-            color = colors[index_q2]
-            linewidth=linewidths[index_q2]
-        
             for index_e2,e2 in enumerate(e2_values):
+                color = colors[index_q2]
+                linewidth=linewidths[index_e2]
+            
                 gamma_stab = gamma_stab_function(q1,q2,e2)
                 gamma_values = pow(10.0,np.linspace(-3.0,np.log10(gamma_stab)))
 
-                label = r'$q_1=%s; \, q_2=%s$'%(q1,q2)
+                if index_e2==0:
+                    #label = r'$q_1=%s; \, q_2=%s; \, e_2 = %s$'%(q1,q2,e2)
+                    label = r'$q_1=%s; \, q_2=%s$'%(q1,q2)
+                else:
+                    label=""
 
                 ys = []
                 for index_gamma,gamma in enumerate(gamma_values):
@@ -812,7 +818,7 @@ def plot_function_gamma_ranges(args):
                     ys.append(epsoct_gamma)
 
                 plot.plot(gamma_values,ys,color=color,linestyle=linestyle,linewidth=linewidth,label=label)
-    plot.set_title('$e_2=0.5$',fontsize=fontsize)
+    #plot.set_title('$e_2=%s$'%e2,fontsize=fontsize)
     
     plot.set_xlim(1e-3,0.7)
     
@@ -824,6 +830,7 @@ def plot_function_gamma_ranges(args):
     handles,labels = plot.get_legend_handles_labels()
     plot.legend(handles,labels,loc="best",fontsize=0.8*fontsize,framealpha=1)
 
+    #filename = 'figs/fig_gamma_range_oct_e2_' + str(e2) + '.pdf'
     filename = 'figs/fig_gamma_range_oct.pdf'
     fig.savefig(filename,dpi=200)
 
@@ -921,7 +928,9 @@ def e_min_e_max_function(C_ZLK,Theta_ZLK,gamma):
     else: ### circulating
         x_max = (1.0 + gamma*Theta_ZLK - np.sqrt( 1.0 + gamma*(gamma*(-2.0 + 2.0*C_ZLK + (gamma-Theta_ZLK)**2) + 2.0*Theta_ZLK) ) )/(gamma**2)
 
-    #print("x_min",x_min,"x_max",x_max)
+#    print("x_min",x_min,"x_max",x_max)
+#    print("x_min",x_min,"x_max",x_max,"xflip",Theta_ZLK/gamma,"Theta",Theta_ZLK,"gamma",gamma)
+
     e_min = np.sqrt(1.0 - x_max)
     e_max = np.sqrt(1.0 - x_min)
     return e_min,e_max
@@ -1086,6 +1095,12 @@ def numerical_integration(args,e0,theta0,gamma,g0):
         plot2.scatter(norm_factor*t_print[t_print_indices_min],1.0-e_print[t_print_indices_min],color='b',label="$\mathrm{Local\,}e_\mathrm{in}\mathrm{-minima}$")
         plot2.scatter(norm_factor*t_print[t_print_indices_max],1.0-e_print[t_print_indices_max],color='r',label="$\mathrm{Local\,}e_\mathrm{in}\mathrm{-maxima}$")
 
+        for x in norm_factor*t_print[t_print_indices_max]:
+            plot1.axvline(x=x,color='k',linestyle='dotted')
+            plot2.axvline(x=x,color='k',linestyle='dotted')
+
+        plot1.axhline(y=90.0,color='k',linestyle='dashed')
+    
         plot1.set_xlim(0.0,0.1*norm_factor*t_print[-1])
         plot2.set_xlim(0.0,0.1*norm_factor*t_print[-1])
 
@@ -1095,7 +1110,7 @@ def numerical_integration(args,e0,theta0,gamma,g0):
         
         ticks = plot2.get_yticks()
         plot1.set_xticklabels([])
-        plot1.set_title("$\gamma=%s$"%gamma,fontsize=fontsize)
+        plot1.set_title(r"$\gamma=%s; \, \theta_0=%s$"%(gamma,theta0),fontsize=fontsize)
         
         plot1.tick_params(axis='both', which ='major', labelsize = labelsize,bottom=True, top=True, left=True, right=True)
         plot2.tick_params(axis='both', which ='major', labelsize = labelsize,bottom=True, top=True, left=True, right=True)
@@ -1109,6 +1124,80 @@ def numerical_integration(args,e0,theta0,gamma,g0):
 
     return np.mean(e_print[t_print_indices_min]), np.std(e_print[t_print_indices_min]),np.mean(e_print[t_print_indices_max]), np.std(e_print[t_print_indices_max]), np.mean(T_ZLKs), np.std(T_ZLKs), L1_div_C2
     
+def plot_function_flip(args):
+
+    if args.plot_fancy==True:
+        pyplot.rc('text',usetex=True)
+        pyplot.rc('legend',fancybox=True)          
+
+    
+    fontsize=22
+    labelsize=18
+    
+    #gamma_points = np.linspace(0.02,0.3,3)
+    gamma_points = [0.02,0.1,0.3]
+    N=200
+    e0_points = np.linspace(0.0,1.0,N)
+    theta0_points = np.linspace(-1.0,1.0,N)
+    g0_points = [0.0,0.5,1.5]
+
+    N_row = len(g0_points)
+    N_col = len(gamma_points)
+    
+    fig, axs = pyplot.subplots(N_row, N_col,figsize=(12,12))
+        
+    #ic=0
+    #ir=0
+    for index_gamma,gamma in enumerate(gamma_points):
+        #ir+=1
+        for index_g0,g0 in enumerate(g0_points):
+            #ic+=1
+            print("index_gamma",index_gamma,"index_g0",index_g0)
+            
+            e0_flip = []
+            theta0_flip = []
+
+            for index_e0,e0 in enumerate(e0_points):
+                for index_theta0,theta0 in enumerate(theta0_points):
+                
+                    Theta_ZLK = Theta_ZLK_function(e0,theta0,gamma)
+                    C_ZLK = C_ZLK_function(e0,theta0,gamma,g0)
+
+                    e_min,e_max = e_min_e_max_function(C_ZLK,Theta_ZLK,gamma)
+                    e_flip = np.sqrt(1.0 - Theta_ZLK/gamma)
+                    if (e_flip >= 0 and e_flip < 1 and e_flip >= e_min and e_flip < e_max):
+                        e0_flip.append(e0)
+                        theta0_flip.append(theta0)
+          
+                    #H0 = H_function(e0,theta0,g0)
+                    #x_flip = Theta_ZLK/gamma
+                    #xdot = np.sqrt(x_flip)*np.sqrt((20.0 + H0 - 18.0*x_flip)*(10.0 - H0 - 12.0*x_flip))
+                    #print("xdot",xdot)
+            plot=axs[index_g0,index_gamma]
+            plot.scatter(theta0_flip,e0_flip,color='k',s=20)
+            plot.annotate("$\gamma=%s;\,g_0=%s$"%(gamma,g0),xy=(0.1,0.1),xycoords = 'axes fraction',fontsize=fontsize, bbox=dict(boxstyle="Round", fc="white", ec="k", lw=1))
+
+            plot.tick_params(axis='both', which ='major', labelsize = labelsize,bottom=True, top=True, left=True, right=True)
+            plot.set_xlim(-1.0,1.0)
+            plot.set_ylim(0.0,1.0)
+        
+            if index_g0 == N_row-1:
+                plot.set_xlabel(r"$\theta_0$",fontsize=fontsize)
+                ticks = plot.get_xticks()
+                plot.set_xticks([-0.5,0,0.5,1.0])
+            else:
+                plot.set_xticklabels([])
+            if index_gamma in [0,3,6]:
+                plot.set_ylabel("$e_0$",fontsize=fontsize)
+                ticks = plot.get_yticks()
+                plot.set_yticks(ticks[1:])
+            else:
+                plot.set_yticklabels([])
+                
+    fig.subplots_adjust(wspace=0,hspace=0)
+    fig.savefig("figs/fig_flip.pdf")
+
+    pyplot.show()
 
     
 if __name__ == '__main__':
@@ -1151,7 +1240,7 @@ if __name__ == '__main__':
         print("="*100)
         print("Analytical")
 
-        print("e_min",e_min,"e_max",e_max,"T_ZLK/Myr",T_ZLK_an*1e-6)
+        print("e_min",e_min,"e_max",e_max,"T_ZLK/Myr",T_ZLK_an*1e-6,"T_ZLK/(L1/C2)=",T_ZLK_an/L1_div_C2)
 
         print("="*100)
         print("Fractional difference numerical/analytical -- e_min",(e_min_mean-e_min)/e_min_mean,"e_max",(e_max_mean-e_max)/e_max_mean,"T_ZLK",(T_ZLK_mean-T_ZLK_an)/T_ZLK_mean)
@@ -1164,3 +1253,6 @@ if __name__ == '__main__':
 
     if args.mode==4:
         plot_function_gamma_ranges(args)
+
+    if args.mode==5:
+        plot_function_flip(args)
