@@ -8,8 +8,11 @@ Usage:
 where mode is 0 to use the (semi)analytic methods to compute the minimum and maximum eccentricities, and the eccentricity oscillation timescale. Initial parameters can be specified with the additional arguments
 
 ` --e0`: initial inner eccentricity
-` --g0`: initial inner argument of periapsis
+
+` --g0`: initial inner argument of periapsis (units: rad)
+
 ` --theta0`: cosine of the initial relative inclination
+
 ` --gamma`: ratio of angular momenta
 
 For information on more options, please refer to the help: type 
