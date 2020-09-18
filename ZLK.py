@@ -34,7 +34,7 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("--mode",                   type=int,       dest="mode",                default=0,                help="Mode -- 0: analytic calculation only; 1: analytic calculation and numerical integration; 2: doing multiple calculations and making plots for a series of parameters; 3: making some illustrative contour plots; 4: making plots illustrating the allowed ranges of gamma ")
+    parser.add_argument("--mode",                   type=int,       dest="mode",                default=0,                help="Mode -- 0: analytic calculation only; 1: analytic calculation and numerical integration; 2: doing multiple calculations and making plots for a series of parameters; 3: making some illustrative contour plots; 4: making plots illustrating the allowed ranges of gamma; 5: make plots showing parameter space for orbital flips ")
 
     parser.add_argument("--e0",                     type=float,     dest="e0",                  default=0.01,             help="Initial inner orbit eccentricity")    
     parser.add_argument("--g0",                     type=float,     dest="g0",                  default=0.01,             help="Initial inner orbit argument of periapsis")    
