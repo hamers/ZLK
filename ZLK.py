@@ -1175,7 +1175,7 @@ def plot_function_flip(args):
                     #print("xdot",xdot)
             plot=axs[index_g0,index_gamma]
             plot.scatter(theta0_flip,e0_flip,color='k',s=20)
-            plot.annotate("$\gamma=%s;\,g_0=%s$"%(gamma,g0),xy=(0.1,0.1),xycoords = 'axes fraction',fontsize=fontsize, bbox=dict(boxstyle="Round", fc="white", ec="k", lw=1))
+            plot.annotate("$\gamma=%s;\,g_0=%s\,\mathrm{rad}$"%(gamma,g0),xy=(0.1,0.1),xycoords = 'axes fraction',fontsize=fontsize, bbox=dict(boxstyle="Round", fc="white", ec="k", lw=1))
 
             plot.tick_params(axis='both', which ='major', labelsize = labelsize,bottom=True, top=True, left=True, right=True)
             plot.set_xlim(-1.0,1.0)
