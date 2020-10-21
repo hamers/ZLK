@@ -917,11 +917,18 @@ def timescale_integrand_function(x,*args):
 def e_min_e_max_function(C_ZLK,Theta_ZLK,gamma):
     A = 9 + 13*gamma**4 + 48*gamma*Theta_ZLK - 16*gamma**3*Theta_ZLK + gamma**2*(-6 - 24*C_ZLK + 4*Theta_ZLK**2)
     B = 27 - 27*gamma**2 - 108*C_ZLK*gamma**2 - 99*gamma**4 - 180*C_ZLK*gamma**4 + 35*gamma**6 + 216*gamma*Theta_ZLK - 144*gamma**3*Theta_ZLK - 288*C_ZLK*gamma**3*Theta_ZLK - 264*gamma**5*Theta_ZLK + 306*gamma**2*Theta_ZLK**2 + 438*gamma**4*Theta_ZLK**2 - 208*gamma**3*Theta_ZLK**3
-    phi = np.arctan( np.sqrt(A**3 - B**2)/B )
-
-    #print("A",A,"B",B,"phi",phi)
+    arg1 = A**3 - B**2
     
-    x_min = (1.0/(12.0*gamma**2))*( (3.0 + 5.0*gamma**2 + 8.0*gamma*Theta_ZLK) - 2.0*np.sqrt(A) * np.sin( phi/3.0 + np.pi/6.0 ) )
+    if arg1>=0:
+        phi = np.arctan2( np.sqrt(arg1), B)
+        x_min = (1.0/(12.0*gamma**2))*( (3.0 + 5.0*gamma**2 + 8.0*gamma*Theta_ZLK) - 2.0*np.sqrt(A) * np.sin( phi/3.0 + np.pi/6.0 ) )
+    else:
+        arg2 = B + np.sqrt(-arg1)
+        
+        if arg2 < 0.0:
+            x_min =  (1.0/(12.0*gamma**2))*( (3.0 + 5.0*gamma**2 + 8.0*gamma*Theta_ZLK) - A*pow(-arg2,-1.0/3.0) - pow(-arg2,1.0/3.0) )
+        else:
+            x_min =  (1.0/(12.0*gamma**2))*( (3.0 + 5.0*gamma**2 + 8.0*gamma*Theta_ZLK) + A*pow(arg2,-1.0/3.0) + pow(arg2,1.0/3.0) )
 
     if C_ZLK < 0.0: ### librating
         x_max = (1.0/(12.0*gamma**2))*( (3.0 + 5.0*gamma**2 + 8.0*gamma*Theta_ZLK) + 2.0*np.sqrt(A) * np.sin( phi/3.0 - np.pi/6.0 ) )
